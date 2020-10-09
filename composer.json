@@ -1,0 +1,20 @@
+{
+	"keywords" : [
+		"cloudcogs",
+		"cloudcogs.io",
+		"counterpoint",
+		"api"
+	],
+	"autoload" : {
+		"psr-4" : {
+			"Cloudcogs\\CounterPoint\\" : "src"
+		}
+	},
+	"name" : "cloudcogsio/counterpoint-api-client",
+	"description" : "Cloudcogs Counterpoint API Client",
+	"license" : "GPL-3.0-or-later",
+	"require" : {
+		"php" : ">=7.3",
+		"laminas/laminas-http" : "2.13.0"
+	}
+}
