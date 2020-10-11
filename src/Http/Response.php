@@ -102,6 +102,11 @@ class Response
                 }
                 break;
 
+            case "application/problem+json":
+                $this->dataObject = $this->apiResponse = json_decode($this->response->getBody());
+
+                break;
+
             default:
                 $UnknownContentTypeException = new ContentTypeMissingException("Content-Type: $contentType");
                 throw $UnknownContentTypeException;
