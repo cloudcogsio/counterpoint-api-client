@@ -6,6 +6,7 @@ use Cloudcogs\CounterPoint\Api\Response\Collection;
 use Cloudcogs\CounterPoint\Api\Response\Entity;
 use Cloudcogs\CounterPoint\Api\AbstractApi;
 use Cloudcogs\CounterPoint\Api\Response\Links;
+use Cloudcogs\CounterPoint\Api\Exception\ContentTypeUnknownException;
 
 class Response
 {
@@ -67,7 +68,34 @@ class Response
             throw $UnknownContentTypeException;
         }
 
-        $contentType = $responseHeaders->get('Content-Type')->getFieldValue();
+        $contentTypeHeaders = $responseHeaders->get('Content-Type');
+
+        if ($contentTypeHeaders instanceof \ArrayIterator)
+        {
+            $contentTypes = [];
+            while (($header = $contentTypeHeaders->current()) != null)
+            {
+                $contentTypes[] = $header->getFieldValue();
+                $contentTypeHeaders->next();
+            }
+
+            if (in_array("application/hal+json", $contentTypes))
+            {
+                $contentType = "application/hal+json";
+            }
+
+            if (in_array("text/html", $contentTypes))
+            {
+                $contentType = "text/html";
+            }
+
+            $contentType = null;
+        }
+        else
+        {
+            $contentType = $contentTypeHeaders->getFieldValue();
+        }
+
         switch ($contentType)
         {
             case "application/hal+json":
@@ -107,8 +135,13 @@ class Response
 
                 break;
 
+            case "text/html":
+                $this->dataObject = $this->apiResponse = (object) ['html'=>$this->response->getBody()];
+
+                break;
+
             default:
-                $UnknownContentTypeException = new ContentTypeMissingException("Content-Type: $contentType");
+                $UnknownContentTypeException = new ContentTypeUnknownException("Content-Type: $contentType");
                 throw $UnknownContentTypeException;
                 break;
         }
