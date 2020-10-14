@@ -11,6 +11,7 @@ use Cloudcogs\CounterPoint\Api\Exception\ContentTypeUnknownException;
 class Response
 {
     private $response;
+    private $break;
     protected $dataObject;
     protected $apiResponse;
     protected $apiClass;
@@ -72,28 +73,16 @@ class Response
 
         if ($contentTypeHeaders instanceof \ArrayIterator)
         {
-            $contentTypes = [];
             while (($header = $contentTypeHeaders->current()) != null)
             {
-                $contentTypes[] = $header->getFieldValue();
+                $contentType = $this->normalizeContentType($header->getFieldValue());
+                if($this->break) break;
                 $contentTypeHeaders->next();
             }
-
-            if (in_array("application/hal+json", $contentTypes))
-            {
-                $contentType = "application/hal+json";
-            }
-
-            if (in_array("text/html", $contentTypes))
-            {
-                $contentType = "text/html";
-            }
-
-            $contentType = null;
         }
         else
         {
-            $contentType = $contentTypeHeaders->getFieldValue();
+            $contentType = $this->normalizeContentType($contentTypeHeaders->getFieldValue());
         }
 
         switch ($contentType)
@@ -147,6 +136,32 @@ class Response
         }
 
         return $this;
+    }
+
+    private function normalizeContentType($contentType)
+    {
+        $this->break = false;
+
+        $known = [
+            "application/hal+json",
+            "application/problem+json",
+            "text/html"
+        ];
+
+        foreach($known as $type)
+        {
+            if(stripos($contentType, $type) > -1)
+            {
+                if($type != "text/html")
+                {
+                    $this->break = true;
+                    return $type;
+                }
+                $contentType = $type;
+            }
+        }
+
+        return $contentType;
     }
 
     public function __call($name, $args)
