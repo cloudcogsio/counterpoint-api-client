@@ -8,13 +8,21 @@ class Customer extends AbstractService
 {
     public function fetchAll($filters = []) : Response
     {
-        //TODO - implement filters
         if (array_key_exists('page', $filters))
         {
             $this->HttpClient->addGetParam('page', ((intval($filters['page']) > 0)?intval($filters['page']):1));
         }
 
-        $this->HttpClient->setUri($this->host."/customers");
+        // Apply Filters as GET params
+        foreach ($filters as $param=>$value)
+        {
+            $this->HttpClient->addGetParam($param, $value);
+        }
+
+        $this
+			->HttpClient
+			->setUri($this->host."/customers");
+
         return $this->HttpClient->get();
     }
 
@@ -22,5 +30,18 @@ class Customer extends AbstractService
     {
         $this->HttpClient->setUri($this->host."/customers/".$id);
         return $this->HttpClient->get();
+    }
+
+    public function patch($id, $data)
+    {
+        return $this->HttpClient
+			->setUri($this->host."/customers/".$id)
+			->setRawBody(json_encode((object) $data))
+			->setHeaders([
+				'Accept'=>"*/*",
+				'Content-Type'=>"application/json"
+			])
+			->setMethod(\Laminas\Http\Request::METHOD_PATCH)
+			->send();
     }
 }
