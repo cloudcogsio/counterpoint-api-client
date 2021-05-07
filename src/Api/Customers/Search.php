@@ -19,7 +19,20 @@ class Search extends AbstractService
             $this->HttpClient->addGetParam('page', ((intval($filters['page']) > 0)?intval($filters['page']):1));
         }
 
-        $this->HttpClient->setUri($this->host."/customers/search/".urlencode($query));
+        if (is_array($query))
+        {
+            foreach ($query as $param=>$value)
+            {
+                $this->HttpClient->addGetParam($param, $value);
+            }
+
+            $this->HttpClient->setUri($this->host."/customers/search");
+        }
+        else
+        {
+            $this->HttpClient->setUri($this->host."/customers/search/".urlencode($query));
+        }
+
         return $this->HttpClient->get();
     }
 }
