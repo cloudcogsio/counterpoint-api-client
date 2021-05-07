@@ -27,7 +27,7 @@ class Response
     /**
      * Proxy to underlying \Laminas\Http\Response object
      *
-     * @return Response
+     * @return \Laminas\Http\Response
      */
     public function proxy() : \Laminas\Http\Response
     {

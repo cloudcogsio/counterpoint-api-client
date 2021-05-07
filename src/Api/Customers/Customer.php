@@ -44,4 +44,16 @@ class Customer extends AbstractService
 			->setMethod(\Laminas\Http\Request::METHOD_PATCH)
 			->send();
     }
+
+    public function patchList(array $list)
+    {
+        return $this->HttpClient
+            ->setUri($this->host."/customers")
+            ->setRawBody(json_encode($list))
+            ->setHeaders([
+                'Accept'=>"*/*",
+                'Content-Type'=>"application/json"
+            ])
+            ->patch();
+    }
 }

@@ -48,9 +48,19 @@ class Client extends \Laminas\Http\Client
         return $this->sendRequest();
     }
 
+    public function patch() : Response
+    {
+        $this->setMethod(Request::METHOD_PATCH);
+
+        return $this->sendRequest();
+    }
+
     public function sendRequest() : Response
     {
-        $this->setHeaders($this->headers);
+        if (!$this->hasHeader('Accept'))
+        {
+            $this->setHeaders($this->headers);
+        }
         $this->setParameterGet($this->apiGetParams);
         $this->setParameterPost($this->apiPostParams);
 
