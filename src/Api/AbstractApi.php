@@ -5,14 +5,14 @@ use Cloudcogs\CounterPoint\APIClient;
 
 abstract class AbstractApi
 {
-    private $APIClient;
+    private APIClient $APIClient;
 
     public function __construct(APIClient $client)
     {
         $this->APIClient = $client;
     }
 
-    public function getClient()
+    public function getClient(): APIClient
     {
         return $this->APIClient;
     }

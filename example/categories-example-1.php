@@ -3,8 +3,8 @@
  * Example retrieving a collection of categories
  */
 
+use Cloudcogs\CounterPoint\Api\Response\Links;
 use Cloudcogs\CounterPoint\APIClient;
-use Cloudcogs\CounterPoint\Http\Response;
 use Cloudcogs\CounterPoint\Api\Response\Collection;
 
 require '../vendor/autoload.php';
@@ -15,7 +15,6 @@ $client = new APIClient($config);
 $APIClass = $client->Categories();
 $service = $APIClass->category();
 
-/** @var  Response $response **/
 $response = $service->setPageSize(5)->fetchAll();
 
 if ($response->isSuccess())
@@ -34,7 +33,7 @@ if ($response->isSuccess())
     /**
      * Get the links from the collection
      *
-     * @var \Cloudcogs\CounterPoint\Api\Response\Links $collectionLinks
+     * @var Links $collectionLinks
      */
     $collectionLinks = $collection->links();
 
@@ -45,7 +44,6 @@ if ($response->isSuccess())
 
     /**
      * Get the dataset from the collection
-     * @var ArrayIterator $items
      */
     $items = $collection->getPayload('category');
 

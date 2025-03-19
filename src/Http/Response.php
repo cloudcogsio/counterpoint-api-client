@@ -3,19 +3,19 @@ namespace Cloudcogs\CounterPoint\Http;
 
 use Cloudcogs\CounterPoint\Api\Exception\ContentTypeMissingException;
 use Cloudcogs\CounterPoint\Api\Response\Collection;
-use Cloudcogs\CounterPoint\Api\Response\Entity;
 use Cloudcogs\CounterPoint\Api\AbstractApi;
+use Cloudcogs\CounterPoint\Api\Response\Entity;
 use Cloudcogs\CounterPoint\Api\Response\Links;
 use Cloudcogs\CounterPoint\Api\Exception\ContentTypeUnknownException;
 
 class Response
 {
-    private $response;
-    private $break;
-    protected $dataObject;
-    protected $apiResponse;
-    protected $apiClass;
-    protected $entityName;
+    private \Laminas\Http\Response $response;
+    private bool $break;
+    protected mixed $dataObject;
+    protected Collection|Entity $apiResponse;
+    protected AbstractApi $apiClass;
+    protected string $entityName;
 
     public function __construct(\Laminas\Http\Response $response, AbstractApi $apiClass)
     {
@@ -39,7 +39,7 @@ class Response
      *
      * @return mixed
      */
-    public function getDataObject()
+    public function getDataObject(): mixed
     {
         return $this->dataObject;
     }
@@ -47,9 +47,9 @@ class Response
     /**
      * Get response collection or entity
      *
-     * @return \Cloudcogs\CounterPoint\Api\Response\Collection|\Cloudcogs\CounterPoint\Api\Response\Entity
+     * @return Collection|Entity
      */
-    public function getApiResponse()
+    public function getApiResponse(): Entity|Collection
     {
         return $this->apiResponse;
     }
@@ -57,16 +57,15 @@ class Response
     /**
      * Evaluates JSON data returned from the CounterPoint API service call and sets the appropriate response for retrieval by calling the "getApiResponse" method of this class.
      *
-     * @throws \Cloudcogs\CounterPoint\Api\Exception\ContentTypeMissingException
      * @return Response
+     *@throws ContentTypeMissingException|ContentTypeUnknownException
      */
     public function evaluate() : Response
     {
         $responseHeaders = $this->response->getHeaders();
         if(!$responseHeaders->has('Content-Type'))
         {
-            $UnknownContentTypeException = new ContentTypeMissingException('Response has no "Content-Type" header');
-            throw $UnknownContentTypeException;
+            throw new ContentTypeMissingException('Response has no "Content-Type" header');
         }
 
         $contentTypeHeaders = $responseHeaders->get('Content-Type');
@@ -130,8 +129,7 @@ class Response
                 break;
 
             default:
-                $UnknownContentTypeException = new ContentTypeUnknownException("Content-Type: $contentType");
-                throw $UnknownContentTypeException;
+                throw new ContentTypeUnknownException("Content-Type: $contentType");
                 break;
         }
 

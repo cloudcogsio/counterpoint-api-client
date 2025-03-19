@@ -7,11 +7,14 @@ use Cloudcogs\CounterPoint\Api\Exception\FilterCategoryIdNotSpecified;
 
 class Subcategory extends AbstractService
 {
+    /**
+     * @throws FilterCategoryIdNotSpecified
+     */
     public function fetchAll($filters = []) : Response
     {
         if (array_key_exists('page', $filters))
         {
-            $this->HttpClient->addGetParam('page', ((intval($filters['page']) > 0)?intval($filters['page']):1));
+            $this->HttpClient->addGetParam('page', ((intval($filters['page']) > 0) ? intval($filters['page']) : 1));
         }
 
         if (!array_key_exists('id', $filters))

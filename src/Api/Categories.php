@@ -4,6 +4,8 @@ namespace Cloudcogs\CounterPoint\Api;
 use Cloudcogs\CounterPoint\Api\Categories\Category;
 use Cloudcogs\CounterPoint\Api\Categories\Search;
 use Cloudcogs\CounterPoint\Api\Categories\Subcategory as SubcategorySvc;
+use Cloudcogs\CounterPoint\Api\Exception\FilterCategoryIdNotSpecified;
+use Cloudcogs\CounterPoint\Api\Exception\SearchTermsNotDefined;
 use Cloudcogs\CounterPoint\Http\Response;
 
 class Categories extends AbstractApi
@@ -13,7 +15,10 @@ class Categories extends AbstractApi
         return new Category($this);
     }
 
-    public function search($query,$filters = []) : Response
+    /**
+     * @throws SearchTermsNotDefined
+     */
+    public function search($query, $filters = []) : Response
     {
         $search = new Search($this);
 
@@ -22,7 +27,10 @@ class Categories extends AbstractApi
         return $search->fetchAll($filters);
     }
 
-    public function subcategory($id,$filters = []) : Response
+    /**
+     * @throws FilterCategoryIdNotSpecified
+     */
+    public function subcategory($id, $filters = []) : Response
     {
         $subcategoryApi = new Subcategory($this->getClient());
         $subcategorySvc = new SubcategorySvc($subcategoryApi);

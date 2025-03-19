@@ -7,12 +7,15 @@ use Cloudcogs\CounterPoint\Api\Exception\FilterItemIdNotSpecified;
 
 class Inventory extends AbstractService
 {
+    /**
+     * @throws FilterItemIdNotSpecified
+     */
     public function fetchAll($filters = []) : Response
     {
         //TODO - implement filters
         if (array_key_exists('page', $filters))
         {
-            $this->HttpClient->addGetParam('page', ((intval($filters['page']) > 0)?intval($filters['page']):1));
+            $this->HttpClient->addGetParam('page', ((intval($filters['page']) > 0) ? intval($filters['page']) : 1));
         }
 
         if (!array_key_exists('id', $filters))
@@ -22,7 +25,7 @@ class Inventory extends AbstractService
         return $this->HttpClient->get();
     }
 
-    public function getLocationInventory($id, $location, $filters)
+    public function getLocationInventory($id, $location, $filters): Response
     {
         $this->HttpClient->setUri($this->host."/items/".urlencode($id)."/inventory/".urlencode($location));
         return $this->HttpClient->get();

@@ -10,7 +10,7 @@ use Cloudcogs\CounterPoint\Api\Subcategory;
 /**
  * CounterPoint API Client Class
  *
- * @version 1.0
+ * @version 1.1
  * @author Ricardo Assing
  *
  * Used to create and return available API Objects that are then used to access the services within those APIs.
@@ -25,7 +25,7 @@ use Cloudcogs\CounterPoint\Api\Subcategory;
  */
 class APIClient
 {
-    private $config;
+    private \ArrayAccess $config;
 
     /**
      * @param \ArrayAccess $config

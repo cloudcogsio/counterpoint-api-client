@@ -8,6 +8,10 @@ use Cloudcogs\CounterPoint\Api\Exception\InventoryLocationNotSpecified;
 
 class Modified extends AbstractService
 {
+    /**
+     * @throws FilterSinceNotDefined
+     * @throws InventoryLocationNotSpecified
+     */
     public function fetchAll($filters = []) : Response
     {
         if (!array_key_exists('since', $filters))
@@ -28,7 +32,7 @@ class Modified extends AbstractService
 
         if (array_key_exists('page', $filters))
         {
-            $this->HttpClient->addGetParam('page', ((intval($filters['page']) > 0)?intval($filters['page']):1));
+            $this->HttpClient->addGetParam('page', ((intval($filters['page']) > 0) ? intval($filters['page']) : 1));
         }
 
         $this->HttpClient->setUri($this->host.$uri.urlencode($query));

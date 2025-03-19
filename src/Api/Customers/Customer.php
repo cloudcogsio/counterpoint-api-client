@@ -3,6 +3,7 @@ namespace Cloudcogs\CounterPoint\Api\Customers;
 
 use Cloudcogs\CounterPoint\Api\Service\AbstractService;
 use Cloudcogs\CounterPoint\Http\Response;
+use Laminas\Http\Request;
 
 class Customer extends AbstractService
 {
@@ -10,7 +11,7 @@ class Customer extends AbstractService
     {
         if (array_key_exists('page', $filters))
         {
-            $this->HttpClient->addGetParam('page', ((intval($filters['page']) > 0)?intval($filters['page']):1));
+            $this->HttpClient->addGetParam('page', ((intval($filters['page']) > 0) ? intval($filters['page']):1));
         }
 
         // Apply Filters as GET params
@@ -26,13 +27,13 @@ class Customer extends AbstractService
         return $this->HttpClient->get();
     }
 
-    public function get($id)
+    public function get($id): Response
     {
         $this->HttpClient->setUri($this->host."/customers/".$id);
         return $this->HttpClient->get();
     }
 
-    public function patch($id, $data)
+    public function patch($id, $data): \Laminas\Http\Response
     {
         return $this->HttpClient
 			->setUri($this->host."/customers/".$id)
@@ -41,11 +42,11 @@ class Customer extends AbstractService
 				'Accept'=>"*/*",
 				'Content-Type'=>"application/json"
 			])
-			->setMethod(\Laminas\Http\Request::METHOD_PATCH)
+			->setMethod(Request::METHOD_PATCH)
 			->send();
     }
 
-    public function patchList(array $list)
+    public function patchList(array $list): Response
     {
         return $this->HttpClient
             ->setUri($this->host."/customers")

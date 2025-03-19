@@ -8,6 +8,10 @@ use Cloudcogs\CounterPoint\Api\Exception\FilterInvalidItemStatus;
 
 class Search extends AbstractService
 {
+    /**
+     * @throws FilterInvalidItemStatus
+     * @throws SearchTermsNotDefined
+     */
     public function fetchAll($filters = []) : Response
     {
         if (!array_key_exists('query', $filters))
@@ -30,7 +34,7 @@ class Search extends AbstractService
 
         if (array_key_exists('page', $filters))
         {
-            $this->HttpClient->addGetParam('page', ((intval($filters['page']) > 0)?intval($filters['page']):1));
+            $this->HttpClient->addGetParam('page', ((intval($filters['page']) > 0) ? intval($filters['page']) : 1));
         }
 
         $this->HttpClient->setUri($this->host.$uri.urlencode($query));

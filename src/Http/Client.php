@@ -1,15 +1,17 @@
 <?php
 namespace Cloudcogs\CounterPoint\Http;
 
+use Cloudcogs\CounterPoint\Api\Exception\ContentTypeMissingException;
+use Cloudcogs\CounterPoint\Api\Exception\ContentTypeUnknownException;
 use Laminas\Http\Request;
 use Cloudcogs\CounterPoint\Api\AbstractApi;
 
 class Client extends \Laminas\Http\Client
 {
-    protected $headers;
-    protected $apiGetParams;
-    protected $apiPostParams;
-    protected $apiClass;
+    protected array $headers;
+    protected array $apiGetParams;
+    protected array $apiPostParams;
+    protected AbstractApi $apiClass;
 
     public function __construct($uri = null, $options = null)
     {
@@ -55,6 +57,10 @@ class Client extends \Laminas\Http\Client
         return $this->sendRequest();
     }
 
+    /**
+     * @throws ContentTypeMissingException
+     * @throws ContentTypeUnknownException
+     */
     public function sendRequest() : Response
     {
         if (!$this->hasHeader('Accept'))

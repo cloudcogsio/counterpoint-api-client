@@ -11,14 +11,14 @@ class Item extends AbstractService
         //TODO - implement filters
         if (array_key_exists('page', $filters))
         {
-            $this->HttpClient->addGetParam('page', ((intval($filters['page']) > 0)?intval($filters['page']):1));
+            $this->HttpClient->addGetParam('page', ((intval($filters['page']) > 0) ? intval($filters['page']) : 1));
         }
 
         $this->HttpClient->setUri($this->host."/items");
         return $this->HttpClient->get();
     }
 
-    public function get($id)
+    public function get($id): Response
     {
         $this->HttpClient->setUri($this->host."/items/".$id);
         return $this->HttpClient->get();

@@ -7,6 +7,9 @@ use Cloudcogs\CounterPoint\Api\Exception\SearchTermsNotDefined;
 
 class Search extends AbstractService
 {
+    /**
+     * @throws SearchTermsNotDefined
+     */
     public function fetchAll($filters = []) : Response
     {
         if (!array_key_exists('query', $filters))
@@ -16,7 +19,7 @@ class Search extends AbstractService
 
         if (array_key_exists('page', $filters))
         {
-            $this->HttpClient->addGetParam('page', ((intval($filters['page']) > 0)?intval($filters['page']):1));
+            $this->HttpClient->addGetParam('page', ((intval($filters['page']) > 0) ? intval($filters['page']) : 1));
         }
 
         if (is_array($query))

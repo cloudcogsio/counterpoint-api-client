@@ -4,14 +4,15 @@ namespace Cloudcogs\CounterPoint\Api\Service;
 use Cloudcogs\CounterPoint\Http\Client;
 use Cloudcogs\CounterPoint\Api\AbstractApi;
 use Cloudcogs\CounterPoint\Api\Exception\InvalidLink;
+use Cloudcogs\CounterPoint\Http\Response;
 
 abstract  class AbstractService
 {
-    protected $page_size;
-    protected $HttpClient;
-    protected $ApiClass;
+    protected int $page_size;
+    protected Client $HttpClient;
+    protected AbstractApi $ApiClass;
 
-    protected $host;
+    protected string $host;
 
     abstract function fetchAll($filters = []);
 
@@ -26,23 +27,23 @@ abstract  class AbstractService
     /**
      * Set desired page size for collections
      *
-     * @param number $records
-     * @return \Cloudcogs\CounterPoint\Api\Service\AbstractService
+     * @param int $records
+     * @return AbstractService
      */
-    public function setPageSize($records = 25)
+    public function setPageSize(int $records = 25): static
     {
-        $this->page_size = intval($records);
+        $this->page_size = $records;
         $this->HttpClient->addGetParam('records', $this->page_size);
 
         return $this;
     }
 
-    public function getPageSize()
+    public function getPageSize(): int
     {
         return $this->page_size;
     }
 
-    public function HTTPClientProxy()
+    public function HTTPClientProxy(): Client
     {
         return $this->HttpClient;
     }
@@ -50,15 +51,13 @@ abstract  class AbstractService
     /**
      * Convenience method used to make a service call from a link object
      *
-     * @param \ArrayObject $link
+     * @param array $link
      * @param boolean $newHTTPClient
-     * @throws InvalidLink
-     * @return \Cloudcogs\CounterPoint\Http\Response
+     * @return Response
+     *@throws InvalidLink
      */
-    public function followLink($link, $newHTTPClient = true)
+    public function followLink(array $link, bool $newHTTPClient = true): Response
     {
-        $link = (array) $link;
-
         if (!array_key_exists("href", $link)) throw new InvalidLink();
 
         if ($newHTTPClient)

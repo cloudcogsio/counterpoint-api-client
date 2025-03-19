@@ -13,15 +13,12 @@ class Category extends AbstractService
 {
     /**
      * Retrieve a collection of all categories
-     *
-     * {@inheritDoc}
-     * @see \Cloudcogs\CounterPoint\Api\Service\AbstractService::fetchAll()
      */
     public function fetchAll($filters = []) : Response
     {
         if (array_key_exists('page', $filters))
         {
-            $this->HttpClient->addGetParam('page', ((intval($filters['page']) > 0)?intval($filters['page']):1));
+            $this->HttpClient->addGetParam('page', ((intval($filters['page']) > 0) ? intval($filters['page']) : 1));
         }
 
         $this->HttpClient->setUri($this->host."/categories");
@@ -34,7 +31,7 @@ class Category extends AbstractService
      * @param string $id
      * @return Response
      */
-    public function get($id) : Response
+    public function get(string $id) : Response
     {
         $this->HttpClient->setUri($this->host."/categories/".$id);
         return $this->HttpClient->get();

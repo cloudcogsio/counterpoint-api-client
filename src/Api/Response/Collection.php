@@ -5,6 +5,9 @@ use Cloudcogs\CounterPoint\Api\Exception\CollectionDataKeyNotFound;
 
 class Collection extends AbstractResponse
 {
+    /**
+     * @throws CollectionDataKeyNotFound
+     */
     public function getPayload($dataKey = null) : \ArrayIterator
     {
         $embedded = $this->offsetGet('_embedded');
@@ -18,11 +21,9 @@ class Collection extends AbstractResponse
             throw new CollectionDataKeyNotFound();
         }
 
-        $embeddedObjects = [];
-        foreach ((array) $embedded as $key=>$list)
-        {
-            $embeddedObjects[$key] = new \ArrayIterator($list,\ArrayIterator::ARRAY_AS_PROPS);
-        }
+        $embeddedObjects = array_map(function ($list) {
+            return new \ArrayIterator($list, \ArrayIterator::ARRAY_AS_PROPS);
+        }, (array) $embedded);
 
         return new \ArrayIterator($embeddedObjects, \ArrayIterator::ARRAY_AS_PROPS);
     }

@@ -8,6 +8,7 @@
  * For partial search by name, pass a search string to the `search` method
  */
 
+use Cloudcogs\CounterPoint\Api\Response\Links;
 use Cloudcogs\CounterPoint\APIClient;
 use Cloudcogs\CounterPoint\Http\Response;
 use Cloudcogs\CounterPoint\Api\Response\Collection;
@@ -19,7 +20,6 @@ $config = new ArrayObject(['host' => 'http://localhost:8080'], ArrayObject::ARRA
 $client = new APIClient($config);
 $APIClass = $client->Customers();
 
-/** @var  Response $response **/
 /*
  * search($query)
  *
@@ -45,7 +45,7 @@ if ($response->isSuccess())
     /**
      * Get the links from the collection
      *
-     * @var \Cloudcogs\CounterPoint\Api\Response\Links $collectionLinks
+     * @var Links $collectionLinks
      */
     $collectionLinks = $collection->links();
 
@@ -56,7 +56,6 @@ if ($response->isSuccess())
 
     /**
      * Get the dataset from the collection
-     * @var ArrayIterator $items
      */
     $items = $collection->getPayload('items');
 
@@ -65,5 +64,4 @@ if ($response->isSuccess())
     print "First Customer NAME: ".$firstItem->NAM."\n";
 
     $firstItemLinks = $firstItem->links();
-
 }
